@@ -1,8 +1,12 @@
 import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const App = () => {
   const [form, setForm] = useState([]);
   const [preview, setPreview] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [startTime, setStartTime] = useState(new Date());
 
   const labels = [
     { id: 1, label: "Single line of text" },
@@ -14,6 +18,9 @@ const App = () => {
     { id: 7, label: "Time" },
     { id: 8, label: "Checkbox" },
     { id: 9, label: "Multiple choice" },
+    { id: 10, label: "Website" },
+    { id: 11, label: "File upload" },
+    { id: 12, label: "Section break" },
   ];
 
   const addFormElement = (e, type) => {
@@ -79,18 +86,20 @@ const App = () => {
                     <strong>{item.label}</strong>
                   </span>
                   <div className="flex items-center space-x-2">
-                    <a href="#" onClick={(e) => handleOpen(key)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-pencil-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                      </svg>
-                    </a>
+                    {item.type != 12 && (
+                      <a href="#" onClick={(e) => handleOpen(key)}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="bi bi-pencil-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                        </svg>
+                      </a>
+                    )}
                     <div>{form[key].open}</div>
                     <a href="#" onClick={(e) => handleDelete(key)}>
                       <svg
@@ -276,10 +285,10 @@ const App = () => {
                       <label className={item.required ? "required" : ""}>
                         {item.label}
                       </label>
-                      <input
-                        type="date"
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
                         className="py-1 px-3 border"
-                        required={item.required}
                       />
                       <p className="text-sm">{item.description}</p>
                     </div>
@@ -289,10 +298,15 @@ const App = () => {
                       <label className={item.required ? "required" : ""}>
                         {item.label}
                       </label>
-                      <input
-                        type="time"
+                      <DatePicker
+                        selected={startTime}
+                        onChange={(time) => setStartTime(time)}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="h:mm aa"
                         className="py-1 px-3 border"
-                        required={item.required}
                       />
                       <p className="text-sm">{item.description}</p>
                     </div>
@@ -322,6 +336,39 @@ const App = () => {
                         </div>
                       ))}
                       <p className="text-sm">{item.description}</p>
+                    </div>
+                  )}
+                  {item.type == 10 && (
+                    <div className="flex flex-col space-y-1">
+                      <label className={item.required ? "required" : ""}>
+                        {item.label}
+                      </label>
+                      <input
+                        type="url"
+                        className="py-1 px-3 border"
+                        placeholder="https://example.com"
+                        pattern="https://.*"
+                        required={item.required}
+                      />
+                      <p className="text-sm">{item.description}</p>
+                    </div>
+                  )}
+                  {item.type == 11 && (
+                    <div className="flex flex-col space-y-1">
+                      <label className={item.required ? "required" : ""}>
+                        {item.label}
+                      </label>
+                      <input
+                        type="file"
+                        className="py-1 px-3 border"
+                        required={item.required}
+                      />
+                      <p className="text-sm">{item.description}</p>
+                    </div>
+                  )}
+                  {item.type == 12 && (
+                    <div className="flex flex-col space-y-1">
+                      <hr />
                     </div>
                   )}
                 </div>
@@ -393,6 +440,27 @@ const App = () => {
             onClick={(e) => addFormElement(e, 9)}
           >
             Multiple choice
+          </a>
+          <a
+            href="#"
+            className="shadow-sm py-3 px-3 border my-1 bg-gray-50 font-semibold"
+            onClick={(e) => addFormElement(e, 10)}
+          >
+            Website
+          </a>
+          <a
+            href="#"
+            className="shadow-sm py-3 px-3 border my-1 bg-gray-50 font-semibold"
+            onClick={(e) => addFormElement(e, 11)}
+          >
+            File upload
+          </a>
+          <a
+            href="#"
+            className="shadow-sm py-3 px-3 border my-1 bg-gray-50 font-semibold"
+            onClick={(e) => addFormElement(e, 12)}
+          >
+            Section break
           </a>
         </div>
       </div>

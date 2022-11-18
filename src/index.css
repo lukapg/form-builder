@@ -6,3 +6,8 @@
     content:" *";
     color: red;
 }
+
+hr {
+    border-top: 1px dashed #ccc;
+    margin: 10px 0;
+}
